@@ -5,17 +5,20 @@ import LogoutButton from './components/auth/auth0/LogoutButton';
 import Profile from './components/auth/auth0/Profile';
 
 import { useAuth0 } from "@auth0/auth0-react";
+import logo from './logo.png';
 
 
 function App() {
   const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log(isAuthenticated);
+
   useEffect(() => {
-    // fetchPosts();
-  }, [])
+    console.log("Is authenticated?: ", isAuthenticated);
+    console.log("User: ", user);
+  }, [isAuthenticated, user])
 
   return (
     <div className="app">
+      <img src={logo} width="50px" alt="logo"/>
       {
         isLoading
           ? <h3> Loading ... </h3>
@@ -23,7 +26,7 @@ function App() {
             {!isAuthenticated
               ?
               <>
-                <p className="heading"><strong> Authenticate to Spotify</strong></p>
+                <p className="heading"><strong> Authenticate with Spotify</strong></p>
                 <div className="buttons">
                   <LoginButton />
                 </div>
