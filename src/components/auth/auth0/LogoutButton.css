@@ -1,0 +1,11 @@
+:root {
+    --logout-color: #C0392B;
+}
+.logout-button {
+    font-size: 20px;
+    padding: 1em 2em;
+    background: var(--logout-color);
+    color: white;
+    border: 2px solid var(--logout-color);
+    border-radius: 5px;
+}

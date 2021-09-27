@@ -1,68 +1,45 @@
 import './App.css';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import LoginButton from './components/auth/auth0/LoginButton';
 import LogoutButton from './components/auth/auth0/LogoutButton';
 import Profile from './components/auth/auth0/Profile';
 
-
-async function gql(query, variables={}) {
-  const data = await fetch('https://api.hashnode.com/', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-          query,
-          variables
-      })
-  });
-
-  return data.json();
-}
-
-const GET_USER_ARTICLES = `
-    query GetUserArticles($page: Int!) {
-        user(username: "alexzaharia") {
-            publication {
-                posts(page: $page) {
-                    title,
-                    brief,
-                    slug,
-                    dateAdded,
-                    contentMarkdown,
-                    coverImage,
-                    tags {
-                      slug,
-                      tagline,
-                      wiki
-                    }
-                },
-                domain
-            }
-        }
-    }
-`;
-
-async function fetchPosts() {
-  gql(GET_USER_ARTICLES, {page: 0})
-    .then(result => {
-      console.log("Posts: ", result.data.user.publication);
-    })
-} 
+import { useAuth0 } from "@auth0/auth0-react";
 
 
 function App() {
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  console.log(isAuthenticated);
   useEffect(() => {
-    fetchPosts();
+    // fetchPosts();
   }, [])
 
   return (
-    <div className="App">
-      <LoginButton/>
-      <LogoutButton/>
-      <Profile/>
-      
+    <div className="app">
+      {
+        isLoading
+          ? <h3> Loading ... </h3>
+          : <>
+            {!isAuthenticated
+              ?
+              <>
+                <p className="heading"><strong> Authenticate to Spotify</strong></p>
+                <div className="buttons">
+                  <LoginButton />
+                </div>
+              </>
+              :
+              <>
+                <p className="heading"> Authenticated as <strong>{user.name}</strong> </p>
+                <Profile user={user} />
+                <div className="buttons">
+                  <LogoutButton />
+                </div>
+              </>
+          }</>
+      }
     </div>
+
   );
 }
 
